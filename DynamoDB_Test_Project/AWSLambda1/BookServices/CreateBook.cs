@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
@@ -12,7 +11,7 @@ using Amazon.Lambda.Serialization.Json;
 using AWSLambda1.BookServices.Models;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
-[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
+[assembly: LambdaSerializer(typeof(JsonSerializer))]
 
 namespace AWSLambda1
 {

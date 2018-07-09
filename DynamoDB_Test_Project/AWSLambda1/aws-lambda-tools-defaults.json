@@ -11,11 +11,11 @@
     "configuration" : "Release",
     "framework"     : "netcoreapp2.0",
     "function-runtime" : "dotnetcore2.0",
-    "function-memory-size" : 256,
-    "function-timeout"     : 30,
-    "function-handler"     : "AWSLambda1::AWSLambda1.CreateBook::Handler",
-    "function-name"        : "Create_Book",
-    "function-role"        : "arn:aws:iam::627870449135:role/lambda_exec_Create_Book",
+    "function-memory-size" : 128,
+    "function-timeout"     : 3,
+    "function-handler"     : "AWSLambda1::Authorizer::Handler",
+    "function-name"        : "Authorizer",
+    "function-role"        : "arn:aws:iam::627870449135:role/lambda_exec_Authorizer",
     "tracing-mode"         : "PassThrough",
     "environment-variables" : ""
 }
