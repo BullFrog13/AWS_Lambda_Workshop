@@ -2,6 +2,10 @@
 {
     public class APIGatewayCustomAuthorizeRequest
     {
-        public string AuthToken { get; set; }
+        public string Type { get; set; }
+
+        public string MethodArn { get; set; }
+
+        public string AuthorizationToken { get; set; }
     }
 }

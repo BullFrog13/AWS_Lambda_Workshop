@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
@@ -11,18 +11,11 @@ using Amazon.Lambda.Serialization.Json;
 using AWSLambda1.BookServices.Models;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
-[assembly: LambdaSerializer(typeof(JsonSerializer))]
-
-namespace AWSLambda1
+// [assembly: LambdaSerializer(typeof(JsonSerializer))]
+namespace AWSLambda1.BookServices
 {
     public class CreateBook
     {
-        /// <summary>
-        /// A simple function that takes a string and does a ToUpper
-        /// </summary>
-        /// <param name="input"></param>
-        /// <param name="context"></param>
-        /// <returns></returns>
         [LambdaSerializer(typeof(JsonSerializer))]
         public async Task<HttpStatusCode> Handler(CreateBookRequest bookRequest)
         {
@@ -91,6 +84,7 @@ namespace AWSLambda1
             RandomNumberGenerator generator = new RNGCryptoServiceProvider();
             var byteArray = new byte[4];
             generator.GetBytes(byteArray);
+
             return BitConverter.ToUInt32(byteArray, 0);
         }
     }

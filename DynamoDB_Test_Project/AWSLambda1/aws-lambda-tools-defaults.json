@@ -12,10 +12,10 @@
     "framework"     : "netcoreapp2.0",
     "function-runtime" : "dotnetcore2.0",
     "function-memory-size" : 128,
-    "function-timeout"     : 3,
-    "function-handler"     : "AWSLambda1::Authorizer::Handler",
+    "function-timeout"     : 15,
+    "function-handler"     : "AWSLambda1::AWSLambda1.Authorizer::Handler",
     "function-name"        : "Authorizer",
-    "function-role"        : "arn:aws:iam::627870449135:role/lambda_exec_Authorizer",
+    "function-role"        : "arn:aws:iam::627870449135:role/lambda_exec_Authorizer-0",
     "tracing-mode"         : "PassThrough",
     "environment-variables" : ""
 }

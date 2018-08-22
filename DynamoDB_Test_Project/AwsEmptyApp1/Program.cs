@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Amazon;
 using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
+using AWSLambda1.BookServices.Models;
 
 // Add using statements to access AWS SDK for .NET services. 
 // Both the Service and its Model namespace need to be added 
@@ -29,7 +34,9 @@ namespace AwsEmptyApp1
 
             ListAllTables();
 
-            CreateItem();
+            GetBooksFromDynamoDb();
+
+            //CreateItem();
 
             Console.Read();
         }
@@ -102,6 +109,35 @@ namespace AwsEmptyApp1
             };
 
             var response = _dynamoDbClient.PutItem(request);
+        }
+
+        private static void GetBooksFromDynamoDb()
+        {
+            /* DynamoDBContext context = new DynamoDBContext(_dynamoDbClient);
+             List<Book> books = context.Scan<Book>().ToList();*/
+
+            DynamoDBContext context = new DynamoDBContext(_dynamoDbClient);
+
+            var test = context.ScanAsync<Book>(new List<ScanCondition>()).GetRemainingAsync().Result;
+        }
+
+        private static void PrintItem(Dictionary<string, AttributeValue> attributeList)
+        {
+            foreach (KeyValuePair<string, AttributeValue> kvp in attributeList)
+            {
+                string attributeName = kvp.Key;
+                AttributeValue value = kvp.Value;
+
+                Console.WriteLine(
+                    attributeName + " " +
+                    (value.S == null ? "" : "S=[" + value.S + "]") +
+                    (value.N == null ? "" : "N=[" + value.N + "]") +
+                    (value.SS == null ? "" : "SS=[" + string.Join(",", value.SS.ToArray()) + "]") +
+                    (value.NS == null ? "" : "NS=[" + string.Join(",", value.NS.ToArray()) + "]")
+                );
+            }
+
+            Console.WriteLine("************************************************");
         }
     }
 }

@@ -1,29 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Amazon.Lambda.Core;
-using Amazon.Lambda.Serialization.Json;
 using AWSLambda1.BookServices.Models;
+using Newtonsoft.Json;
+using JsonSerializer = Amazon.Lambda.Serialization.Json.JsonSerializer;
 
+[assembly: LambdaSerializer(typeof(JsonSerializer))]
 namespace AWSLambda1
 {
     public class Authorizer
     {
         [LambdaSerializer(typeof(JsonSerializer))]
-        public async Task<AuthPolicy> Handler(APIGatewayCustomAuthorizeRequest authorizeRequest)
+        public AuthPolicy Handler(APIGatewayCustomAuthorizeRequest authorizeRequest)
         {
             try
             {
-                var token = authorizeRequest.AuthToken;
+                var token = authorizeRequest.AuthorizationToken;
                 bool authorized = CheckAuthorization(token);
 
                 var authPolicy = new AuthPolicy
                 {
                     PrincipalId = token,
-                    PolicyStatement = new PolicyStatement
+                    PolicyDocument = new PolicyDocument
                     {
                         Version = "2012-10-17",
                         Statement = new List<States>()
+                    },
+                    Context = new Context
+                    {
+                        Key = "string",
+                        NumKey = 123,
+                        BoolKey = true
                     }
                 };
 
@@ -33,9 +40,9 @@ namespace AWSLambda1
                     {
                         Action = "execute-api:Invoke",
                         Effect = "Allow",
-                        Resource = "arn"
+                        Resource = authorizeRequest.MethodArn
                     };
-                    authPolicy.PolicyStatement.Statement.Add(statement);
+                    authPolicy.PolicyDocument.Statement.Add(statement);
                 }
                 else
                 {
@@ -43,10 +50,9 @@ namespace AWSLambda1
                     {
                         Action = "execute-api:Invoke",
                         Effect = "Deny",
-                        Resource = "arn"
+                        Resource = authorizeRequest.MethodArn
                     };
-
-                    authPolicy.PolicyStatement.Statement.Add(statement);
+                    authPolicy.PolicyDocument.Statement.Add(statement);
                 }
 
                 return authPolicy;
@@ -72,28 +78,33 @@ namespace AWSLambda1
 
             throw new Exception("500");
         }
-             
     }
 
     public class AuthPolicy
     {
+        [JsonProperty("principalId")]
         public string PrincipalId { get; set; }
 
-        public PolicyStatement PolicyStatement { get; set; }
+        [JsonProperty("policyDocument")]
+        public PolicyDocument PolicyDocument { get; set; }
 
+        [JsonProperty("context")]
         public Context Context { get; set; } 
     }
 
     public class Context
     {
-        public string stringKey { get; set; }
+        [JsonProperty("key")]
+        public string Key { get; set; }
 
-        public int numberKey { get; set; }
+        [JsonProperty("numKey")]
+        public int NumKey { get; set; }
 
-        public bool booleanKey { get; set; }
+        [JsonProperty("boolKey")]
+        public bool BoolKey { get; set; }
     }
 
-    public class PolicyStatement
+    public class PolicyDocument
     {
         public string Version { get; set; }
 
